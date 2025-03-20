@@ -1,3 +1,5 @@
+import Editor from "./editor";
+
 interface DocumentIDPageProps {
   params: Promise<{ documentId: string }>;
 }
@@ -7,6 +9,7 @@ export default async ({ params }: DocumentIDPageProps) => {
   return (
     <div>
       <h1>Document {documentId}</h1>
+      <Editor />
     </div>
   );
 };
