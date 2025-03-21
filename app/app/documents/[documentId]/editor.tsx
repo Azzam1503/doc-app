@@ -1,7 +1,12 @@
-import React from "react";
+"use client";
 
+import React, { useEffect } from "react";
+import Quill from "quill";
 const Editor = () => {
-  return <div>Editor</div>;
+  useEffect(() => {
+    new Quill("#container");
+  }, []);
+  return <div id="container"></div>;
 };
 
 export default Editor;
