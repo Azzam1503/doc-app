@@ -8,7 +8,8 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server,{
     cors: {
-        origin: "*"
+        origin: process.env.ORIGIN || "http://localhost:3000",
+        methods: ["GET", "POST"]
     }
 });
 
@@ -23,7 +24,18 @@ io.on("connection", (socket: Socket)=>{
         io.emit("message", data);
     })
 
-    socket.send("Hello from the socket server");
+    socket.on("get-document", (documentId: string)=>{
+        console.log(documentId);
+        socket.join(documentId);
+        
+        socket.emit("load-document", "Hello World");
+        
+        socket.on("document-change", (changes: string) => {
+            console.log(changes);
+            socket.broadcast.to(documentId).emit("receive-changes", changes);
+        })
+    });
+    
     
 });
 
