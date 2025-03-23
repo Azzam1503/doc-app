@@ -1,3 +1,5 @@
+import * as ReactHookForm from "react-hook-form";
 export default () => {
-  return <div>Signun page</div>;
+  console.log(ReactHookForm);
+  return <div className="bg-red-400">Signun page</div>;
 };
