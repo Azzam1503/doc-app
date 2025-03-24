@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import GoogleSignInBtn from "@/components/googleSignInBtn";
 
 const formSchema = z.object({
   email: z.string().email("This is not a valid email"),
@@ -78,8 +78,8 @@ export default () => {
                 </FormItem>
               )}
             />
-            <Button className="w-full mt-6" type="submit">
-              Sign In
+            <Button className="w-full mt-6 py-4" type="submit">
+              Sign in
             </Button>
           </form>
           <div
@@ -90,6 +90,7 @@ after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400"
             or
           </div>
           <div>
+            <GoogleSignInBtn>Sign in with google</GoogleSignInBtn>
             <p className="text-sm text-center text-gray-600 mt-2">
               If you don't have an account, please{" "}
               <Link className="text-blue-500 hover:underline" href={"/signup"}>
