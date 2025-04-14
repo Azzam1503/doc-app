@@ -23,15 +23,21 @@ export const GET = async (req: NextRequest) =>{
         if(!user) return NextResponse.json({message: "No user found"}, {status: 401});
 
         
-        const docs = await client.document.findMany({
+        const documents = await client.permission.findMany({
             where:{
-                userId
-            }
-        });
+                userId,
+                role: "OWNER"
+            },
+            // include:{
+            //     document: true
+            // }
+        })
 
-        console.log("docs-here", docs);
+        
 
-        return NextResponse.json({docs}, {status: 200});      
+        console.log(documents);
+
+        return NextResponse.json({documents}, {status: 200});      
         
     } catch (error) {
         return NextResponse.json({message: "Error while creating the document"}, {status: 501});   

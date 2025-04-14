@@ -66,11 +66,11 @@ function Editor() {
     socket.emit("get-document", documentId);
   }, [socket, quillReady, documentId]);
 
-  // const saveDoc = () => {
-  //   console.log(quillRef.current.getContents());
-  //   if (!socket) return;
-  //   socket.emit("save-document", documentId, quillRef.current.getContents());
-  // };
+  const saveDoc = () => {
+    console.log(quillRef.current.getContents());
+    if (!socket) return;
+    socket.emit("save-document", documentId, quillRef.current.getContents());
+  };
 
   const handleChange = (content: string, delta: any, source: string) => {
     if (source !== "user" || !socket) return;
@@ -92,9 +92,9 @@ function Editor() {
           handleChange(content, delta, source)
         }
       />
-      {/* <button onClick={saveDoc} className="bg-green-600 p-2 rounded mt-2">
+      <button onClick={saveDoc} className="bg-green-600 p-2 rounded mt-2">
         Save content
-      </button> */}
+      </button>
     </div>
   );
 }

@@ -19,8 +19,8 @@ const page = () => {
       try {
         const res = await fetch("/api/document/get-docs");
         const data = await res.json();
-        console.log(data);
-        setDocs(data.docs);
+        console.log("this is the get doc data", data);
+        setDocs(data.documents);
       } catch (error) {
         console.log(error);
       }
@@ -41,16 +41,18 @@ const page = () => {
     }
   };
 
+  console.log("heres the type", typeof docs);
   return (
     <div>
       <div>
         <h2>Old Docs</h2>
         <ul>
-          {docs.map((doc: any) => (
-            <li key={doc.id}>
-              <a href={`/documents/${doc.id}`}>{doc.id}</a>
-            </li>
-          ))}
+          {docs &&
+            docs.map((doc: any) => (
+              <li key={doc.documentId}>
+                <a href={`/documents/${doc.documentId}`}>{doc.id}</a>
+              </li>
+            ))}
         </ul>
       </div>
       <button className="bg-teal-800" onClick={createDoc}>

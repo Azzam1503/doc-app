@@ -23,12 +23,21 @@ export const POST = async (req: NextRequest) =>{
 
         const newDoc = await client.document.create({
             data: {
-                userId,
                 content: {}
             }
         });
         console.log(newDoc);
-        return NextResponse.json({message: "dou"}, {status: 200});      
+
+        const permission = await client.permission.create({
+            data:{
+                userId,
+                documentId: newDoc.id,
+                role: "OWNER"
+            }
+        });
+
+        console.log(permission);
+        return NextResponse.json({message: "document created successfully"}, {status: 200});      
         
     } catch (error) {
         return NextResponse.json({message: "Error while creating the document"}, {status: 501});   
