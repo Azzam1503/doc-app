@@ -2,8 +2,11 @@ import { createServer } from 'http';
 import express from "express";
 import { Server, Socket } from "socket.io";
 const PORT = process.env.PORT || 4000;
+import {PrismaClient} from "@prisma/client";
 
 const app = express();
+
+const client = new PrismaClient();
 
 const server = createServer(app);
 const io = new Server(server,{
@@ -24,19 +27,40 @@ io.on("connection", (socket: Socket)=>{
         io.emit("message", data);
     })
 
-    socket.on("get-document", (documentId: string)=>{
-        console.log(documentId);
-        socket.join(documentId);
+    socket.on("get-document", async (documentId: string)=>{
+
+        const document = await client.document.findUnique({
+            where:{
+                id: documentId
+            }
+        });
+
+        if(!document) return;
         
-        socket.emit("load-document", "Hello World");
+        console.log(document);
+
+        socket.join(documentId);
+
+        
+        
+        socket.emit("load-document", document.content);
         
         socket.on("document-change", (changes: string) => {
-            console.log(changes);
+            // console.log(changes);
             socket.broadcast.to(documentId).emit("receive-changes", changes);
         })
     });
     
-    
+    socket.on("save-document", async (documentId: string, content: string)=>{
+        await client.document.update({
+            where:{
+                id: documentId
+            },
+            data:{
+                content
+            }
+        });
+    })
 });
 
 server.listen(4000, ()=>{
