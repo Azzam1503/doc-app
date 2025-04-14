@@ -64,7 +64,7 @@ model User {
   updatedAt     DateTime @updatedAt
   accounts      Account[]
   sessions      Session[]
-  documents     Document[]
+  permissions   Permission[]
  
   @@map("users")
 }
@@ -84,6 +84,21 @@ model Document{
   content Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId String 
-  user User @relation(fields: [userId], references: [id])
+  permissions Permission[]
+}
+
+
+model Permission{
+  id String @id @default(cuid())
+  documentId String
+  userId String
+  role Role
+  document Document @relation(fields: [documentId], references: [id])
+  user User @relation(fields:[userId], references: [id])
+}
+
+enum Role {
+  OWNER
+  EDITOR
+  VIEWER
 }
