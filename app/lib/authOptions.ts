@@ -18,7 +18,7 @@ const AuthOptions: NextAuthOptions = {
                 const {email, password} = credentials;
                 if(!credentials?.email || !credentials?.password) return null;
 
-                console.log(email, password);
+                // console.log(email, password);
 
                 const user = await client.user.findFirst({
                     where: {
@@ -56,7 +56,7 @@ const AuthOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     callbacks:{
         async jwt({token, user}){
-            console.log("jwt", token, user);
+            // console.log("jwt", token, user);
             // console.log(user);
             if(user){
                 token.id = user.id;
@@ -65,7 +65,7 @@ const AuthOptions: NextAuthOptions = {
             return token;
         },
         async session({session, user, token}){
-            console.log("session", session, user, token);
+            // console.log("session", session, user, token);
             if(session.user){
                 session.user.id = token.id;
                 session.user.hey = token.hey;
