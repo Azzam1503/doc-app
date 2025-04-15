@@ -2,16 +2,15 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const page = () => {
   const router = useRouter();
   const session = useSession();
-  // console.log(session.data);
+  console.log(session.data);
   // if (!session.data) {
   //   router.push("/signin");
   // }
-
   const [docs, setDocs] = useState([]);
 
   useEffect(() => {

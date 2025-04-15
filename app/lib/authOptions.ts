@@ -4,6 +4,7 @@ import { client } from './db';
 import {PrismaAdapter} from '@next-auth/prisma-adapter'; 
 import bcrypt from 'bcryptjs';
 import { NextAuthOptions } from 'next-auth';
+import jwt from 'jsonwebtoken';
 
 const AuthOptions: NextAuthOptions = {
     providers: [
@@ -38,7 +39,6 @@ const AuthOptions: NextAuthOptions = {
                     id: user.id + "",
                     name: user.name,
                     email: user.email,
-                    new: "new"
                 };
             }
     }),
@@ -60,15 +60,23 @@ const AuthOptions: NextAuthOptions = {
             // console.log(user);
             if(user){
                 token.id = user.id;
-                token.hey = "hemlo"
-            }
+                const customJwt = jwt.sign({
+                    sub: user.id
+                }, process.env.CUSTOM_JWT_SECRET || "");
+
+                console.log(customJwt);
+
+                token.jwt = customJwt;
+            };
+
+
             return token;
         },
         async session({session, user, token}){
             // console.log("session", session, user, token);
             if(session.user){
                 session.user.id = token.id;
-                session.user.hey = token.hey;
+                session.user.jwt = token.jwt;
             }
             return session;
         }
