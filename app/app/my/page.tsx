@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const page = () => {
   const router = useRouter();
   const session = useSession();
-  console.log(session.data);
+  // console.log(session.data);
   // if (!session.data) {
   //   router.push("/signin");
   // }

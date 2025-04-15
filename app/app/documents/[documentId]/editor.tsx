@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import io, { Socket } from "socket.io-client";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -28,15 +29,29 @@ function Editor() {
   const quillRef = useRef<any>(null);
   const [enable, setEnable] = useState(false);
   const [quillReady, setQuillReady] = useState(false);
+  const { data: session } = useSession();
+  console.log(session);
 
   useEffect(() => {
-    const connection = io("http://localhost:4000");
+    if (!session?.user?.jwt) return;
+
+    const connection = io("http://localhost:4000", {
+      auth: {
+        token: session.user.jwt,
+      },
+    });
+
+    connection.on("connect", () => {
+      console.log("✅ Connected to socket server");
+      console.log("🔗 Socket ID:", connection.id);
+    });
+
     setSocket(connection);
 
     return () => {
       connection.disconnect();
     };
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     if (!socket) return;
