@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import io, { Socket } from "socket.io-client";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
@@ -31,6 +31,10 @@ function Editor() {
   const [quillReady, setQuillReady] = useState(false);
   const { data: session } = useSession();
   console.log(session);
+
+  const path = usePathname();
+
+  console.log(path);
 
   useEffect(() => {
     if (!session?.user?.jwt) return;
