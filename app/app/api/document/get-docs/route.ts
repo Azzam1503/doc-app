@@ -7,7 +7,7 @@ export const GET = async (req: NextRequest) =>{
     console.log("hemlooooooooo");
     try { 
         const session = await getServerSession(AuthOptions);
-        
+        console.log("session on the route",session);
         if(!session || !session.user){
             return NextResponse.json({message: "Unauthorized"}, {status: 401});
         };
