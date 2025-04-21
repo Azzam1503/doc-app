@@ -29,6 +29,10 @@ function Editor() {
   const quillRef = useRef<any>(null);
   const [enable, setEnable] = useState(false);
   const [quillReady, setQuillReady] = useState(false);
+  const [role, setRole] = useState<"OWNER" | "EDITOR" | "VIEWER" | null>(
+    "EDITOR"
+  );
+
   const { data: session } = useSession();
   console.log(session);
 
@@ -97,7 +101,7 @@ function Editor() {
   };
 
   return (
-    <div className="w-[8.5in] mx-auto min-h-[11in] p-4 bg-white">
+    <div className="bg-[#f3f3f3] min-h-screen">
       <ReactQuill
         theme="snow"
         modules={MODULES}
@@ -105,6 +109,10 @@ function Editor() {
           if (el && !quillReady) {
             quillRef.current = el.getEditor();
             setQuillReady(true);
+          }
+
+          if (role === "VIEWER") {
+            quillRef.current.enable(false);
           }
         }}
         onChange={(content, delta, source) =>

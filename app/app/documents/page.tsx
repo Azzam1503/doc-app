@@ -18,7 +18,10 @@ const page = async () => {
         <h2>Your Documents</h2>
         <ul>
           {docs.map((doc: any) => (
-            <li key={doc.documentId}>
+            <li
+              key={doc.documentId}
+              className="h-[180px] bg-red-300 w-[280px] rounded"
+            >
               <Link href={`/documents/${doc.documentId}`}>{doc.id}</Link>
             </li>
           ))}
