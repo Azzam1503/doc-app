@@ -37,7 +37,7 @@ export const POST = async (req: NextRequest) =>{
         });
 
         console.log(permission);
-        return NextResponse.json({message: "document created successfully"}, {status: 200});      
+        return NextResponse.json({message: "document created successfully", id: newDoc.id}, {status: 200});      
         
     } catch (error) {
         return NextResponse.json({message: "Error while creating the document"}, {status: 501});   

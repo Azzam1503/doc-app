@@ -4,6 +4,7 @@ import Link from "next/link";
 import AuthOptions from "@/lib/authOptions";
 import { client } from "@/lib/db";
 import TemplateGallery from "@/components/TemplateGallery";
+import DocumentTable from "@/components/DocumentTable";
 
 const page = async () => {
   const session = await getServerSession(AuthOptions);
@@ -16,6 +17,7 @@ const page = async () => {
   return (
     <div>
       <TemplateGallery />
+      <DocumentTable documents={docs} />
     </div>
   );
 };
@@ -28,6 +30,15 @@ const getDocs = async (userId: string) => {
       where: {
         userId,
         role: "OWNER",
+      },
+      include: {
+        document: {
+          select: {
+            title: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
       },
     });
     console.log(documents);

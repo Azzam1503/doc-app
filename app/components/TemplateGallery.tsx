@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const templates = [
   {
@@ -48,7 +49,24 @@ const templates = [
 ];
 
 const TemplateGallery = () => {
-  const isCreating = false;
+  const [isCreating, setIsCreating] = useState(false);
+  const router = useRouter();
+  const createDocument = async () => {
+    try {
+      setIsCreating(true);
+      const res = await fetch("/api/document/create", {
+        method: "POST",
+      });
+      const data = await res.json();
+      console.log(data);
+      router.push(`/documents/${data.id}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   return (
     <div className="bg-[#f1f3f4]">
       <div className="max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-y-4">
@@ -68,7 +86,7 @@ const TemplateGallery = () => {
                 >
                   <button
                     disabled={isCreating}
-                    onClick={() => {}}
+                    onClick={createDocument}
                     style={{
                       backgroundImage: `url(${template.image})`,
                       backgroundSize: "cover",
@@ -84,6 +102,8 @@ const TemplateGallery = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
         </Carousel>
       </div>
     </div>
