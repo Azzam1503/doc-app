@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
 import { Button } from "./ui/button";
-import { Delete, ExternalLink, MoreVertical, Trash } from "lucide-react";
+import { ExternalLink, MoreVertical, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import RemoveDialog from "./RemoveDialog";
 
 const DocumentMenu = ({
   documentId,
@@ -26,13 +27,18 @@ const DocumentMenu = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <RemoveDialog documentId={documentId}>
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Trash className="size-4 mr-2" />
+            Delete
+          </DropdownMenuItem>
+        </RemoveDialog>
         <DropdownMenuItem onClick={() => onNewTab(documentId)}>
           <ExternalLink className="size-4 mr-2" />
           Open in a new tab
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onNewTab(documentId)}>
-          <Trash />
-          Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
