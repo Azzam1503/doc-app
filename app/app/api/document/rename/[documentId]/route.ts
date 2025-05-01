@@ -5,7 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = async (req: NextRequest, {params}: {params: {documentId: string}}) => {
     try{
+        console.log("update route called")
         const {documentId} = await params;
+
         const session = await getServerSession(AuthOptions);
         if(!session || !session.user){
             return NextResponse.json({message: "Unauthorized"}, {status: 401});
@@ -14,6 +16,7 @@ export const PATCH = async (req: NextRequest, {params}: {params: {documentId: st
         const permission = await client.permission.findFirst({
             where:{
                 documentId,
+                userId: session.user.id,   
                 role:{
                     in: ["OWNER"]
                 }
@@ -24,8 +27,10 @@ export const PATCH = async (req: NextRequest, {params}: {params: {documentId: st
             return NextResponse.json({message: "Unauthorized / No document found"}, {status: 404});
         };
 
-        const {title} = await req.json();
+        console.log(permission)
 
+        const {title} = await req.json();
+        console.log("title", title);
         await client.document.update({
             where:{
                 id: documentId,
@@ -34,10 +39,11 @@ export const PATCH = async (req: NextRequest, {params}: {params: {documentId: st
                 title
             }
         })
-
+        console.log("Document title updated", title);
         return NextResponse.json({message: "Document title updated"}, {status: 200});
         
     }catch(error){
-
+        console.log(error);
+        return NextResponse.json({message: "Internal server error", error}, {status: 500});
     }
 }

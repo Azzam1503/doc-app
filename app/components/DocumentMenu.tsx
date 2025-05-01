@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "./ui/button";
-import { ExternalLink, MoreVertical, Trash } from "lucide-react";
+import { ExternalLink, MoreVertical, Pen, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import RemoveDialog from "./RemoveDialog";
+import RenameDocument from "./RenameDocument";
 
 const DocumentMenu = ({
   documentId,
@@ -36,6 +37,15 @@ const DocumentMenu = ({
             Delete
           </DropdownMenuItem>
         </RemoveDialog>
+        <RenameDocument documentId={documentId} initailTitle={title}>
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Pen className="size-4 mr-2" />
+            Reanme Title
+          </DropdownMenuItem>
+        </RenameDocument>
         <DropdownMenuItem onClick={() => onNewTab(documentId)}>
           <ExternalLink className="size-4 mr-2" />
           Open in a new tab

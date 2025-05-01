@@ -1,67 +1,91 @@
 "use client";
 import React, { useState } from "react";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "./ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 interface RemoveDialogProps {
   documentId: string;
+  initailTitle: string;
   children: React.ReactNode;
 }
 
-const RemoveDialog = ({ documentId, children }: RemoveDialogProps) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const handleDelete = async () => {
+const RenameDocument = ({
+  documentId,
+  initailTitle,
+  children,
+}: RemoveDialogProps) => {
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [title, setTitle] = useState(initailTitle);
+  const [open, setOpen] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      setIsDeleting(true);
-      const res = await fetch(`/api/document/delete/${documentId}`, {
-        method: "DELETE",
+      e.preventDefault();
+      setIsRenaming(true);
+      const res = await fetch(`/api/document/rename/${documentId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ title }),
       });
       if (!res.ok) {
-        throw new Error("Failed to delete document");
+        throw new Error("Failed to update document");
       }
       const data = await res.json();
       console.log(data);
     } catch (error) {
       console.log(error);
     } finally {
-      setIsDeleting(false);
+      setIsRenaming(false);
+      setOpen(false);
     }
   };
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent onClick={(e) => e.stopPropagation()}>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            document.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
-            disabled={isDeleting}
-            onClick={handleDelete}
-            className="bg-red-500 text-white hover:bg-red-600"
-          >
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent onClick={(e) => e.stopPropagation()}>
+        <form onSubmit={onSubmit}>
+          <DialogHeader>
+            <DialogTitle>Rename Document</DialogTitle>
+            <DialogDescription>
+              Change the document title from here.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="my-4">
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(false);
+              }}
+              disabled={isRenaming}
+              type="button"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isRenaming}>
+              Save
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default RemoveDialog;
+export default RenameDocument;
